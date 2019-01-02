@@ -5,6 +5,7 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+from fake_useragent import UserAgent
 from scrapy import signals
 
 
@@ -101,3 +102,19 @@ class AmazonDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+
+class AmazonUserAgentMiddleware(object):
+
+    def __init__(self, crawler):
+        super(AmazonUserAgentMiddleware, self).__init__()
+        self.ua = UserAgent()
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
+
+    def process_request(self, request, spider):
+        randomagent = self.ua.random
+        print(randomagent)
+        request.headers.setdefault('User-Agent', randomagent)
