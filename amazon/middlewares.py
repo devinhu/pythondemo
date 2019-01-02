@@ -108,13 +108,11 @@ class AmazonUserAgentMiddleware(object):
 
     def __init__(self, crawler):
         super(AmazonUserAgentMiddleware, self).__init__()
-        self.ua = UserAgent()
+        self.ua = UserAgent(verify_ssl=False)
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(crawler)
 
     def process_request(self, request, spider):
-        randomagent = self.ua.random
-        print(randomagent)
-        request.headers.setdefault('User-Agent', randomagent)
+        request.headers.setdefault('User-Agent', self.ua.random)

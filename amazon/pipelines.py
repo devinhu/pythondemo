@@ -9,11 +9,6 @@ import MySQLdb.cursors
 from twisted.enterprise import adbapi
 
 
-class AmazonPipeline(object):
-    def process_item(self, item, spider):
-        return item
-
-
 class MysqlPipeline(object):
 
     def __init__(self, dbpool):

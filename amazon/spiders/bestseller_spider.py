@@ -23,7 +23,7 @@ class BestSellSpider(scrapy.Spider):
             bean = BestsellerURL()
             bean['url'] = item.xpath("./a/@href").extract_first()
             bean['title'] = item.xpath("./a/text()").extract_first().strip()
-            bean['parent_title'] = "amazon3"
+            bean['parent_title'] = "amazon"
             yield bean
             # yield Request(url=bean['url'], callback=self.parse_child1_url, dont_filter=True)
 
