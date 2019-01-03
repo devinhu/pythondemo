@@ -25,6 +25,7 @@ class BestSellSpider(scrapy.Spider):
             bean['title'] = item.xpath("./a/text()").extract_first().strip()
             bean['parent_title'] = "amazon"
             yield bean
+            yield Request(url=bean['url'], callback=self.parse_bestsellers_products, dont_filter=True)
             # yield Request(url=bean['url'], callback=self.parse_child1_url, dont_filter=True)
 
     pass
