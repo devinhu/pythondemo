@@ -24,7 +24,7 @@ class BestSellSpider(scrapy.Spider):
             bean['url'] = item.xpath("./a/@href").extract_first()
             bean['title'] = item.xpath("./a/text()").extract_first().strip()
             bean['parent_title'] = "amazon"
-            # yield bean
+            yield bean
             yield Request(url=bean['url'], callback=self.parse_bestsellers_products, dont_filter=True)
             # yield Request(url=bean['url'], callback=self.parse_child1_url, dont_filter=True)
 
@@ -95,7 +95,6 @@ class BestSellSpider(scrapy.Spider):
             bean['review'] = review
 
             bean['asin'] = re.match('.*/dp/(.*?)/ref.*', url, re.M | re.I).group(1)
-            print(bean)
-            # yield bean
+            yield bean
 
     pass
