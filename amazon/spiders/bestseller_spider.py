@@ -24,7 +24,7 @@ class BestSellSpider(scrapy.Spider):
             bean['url'] = item.xpath("./a/@href").extract_first()
             bean['title'] = item.xpath("./a/text()").extract_first().strip()
             bean['parent_title'] = "amazon"
-            yield bean
+            # yield bean
             yield Request(url=bean['url'], callback=self.parse_bestsellers_products, dont_filter=True)
             # yield Request(url=bean['url'], callback=self.parse_child1_url, dont_filter=True)
 
@@ -73,12 +73,29 @@ class BestSellSpider(scrapy.Spider):
             bean['url'] = parse.urljoin(response.url, url)
             bean['title'] = item.xpath(".//a[@class='a-link-normal']/div[1]/text()").extract_first().strip()
             bean['ranks'] = item.xpath(".//span[@class='zg-badge-text']/text()").extract_first()
-            bean['price'] = item.xpath(".//span[@class='p13n-sc-price']/text()").extract_first()
-            # bean['offers'] = item.xpath(".//span[@class='a-color-secondary']/text()").extract_first()
-            bean['offers'] = ""
-            bean['review'] = item.xpath(".//a[@class='a-size-small a-link-normal']/text()").extract_first()
+
+            price = item.xpath(".//span[@class='p13n-sc-price']/text()").extract_first()
+            if price is None:
+                price = "0"
+            else:
+                price = price.replace("$", "")
+            bean['price'] = price
+
+            offers = item.xpath(".//span[@class='a-color-secondary']/text()").extract_first()
+            if offers:
+                offers = "0"
+                bean['offers'] = offers
+            if offers is None:
+                offers = "0"
+                bean['offers'] = offers
+
+            review = item.xpath(".//a[@class='a-size-small a-link-normal']/text()").extract_first()
+            if review:
+                review = "0"
+            bean['review'] = review
+
             bean['asin'] = re.match('.*/dp/(.*?)/ref.*', url, re.M | re.I).group(1)
-            # print(bean)
-            yield bean
+            print(bean)
+            # yield bean
 
     pass
