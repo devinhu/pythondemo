@@ -84,10 +84,9 @@ class BestSellSpider(scrapy.Spider):
             offers = item.xpath(".//span[@class='a-color-secondary']/text()").extract_first()
             if offers:
                 offers = "0"
-                bean['offers'] = offers
             if offers is None:
                 offers = "0"
-                bean['offers'] = offers
+            bean['offers'] = offers
 
             review = item.xpath(".//a[@class='a-size-small a-link-normal']/text()").extract_first()
             if review:
