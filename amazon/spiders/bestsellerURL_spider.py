@@ -5,11 +5,12 @@ from scrapy.http import Request
 from amazon.items import BestsellerURL
 
 
-class BestSellSpider(scrapy.Spider):
-    parent_title = "Home & Kitchen"
-    name = "bestsellerURL"
+class BestsellerURLSpider(scrapy.Spider):
+    name = "bestsellerurl"
     allowed_domains = ["wwww.amazon.com"]
-    start_urls = ["https://www.amazon.com/Best-Sellers-Home-Kitchen/zgbs/home-garden/ref=zg_bs_nav_0"]
+
+    parent_title = "Toys & Games"
+    start_urls = ["https://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games/ref=zg_bs_nav_0"]
 
     """
     据URL解析当前关键字下的bestsellers的URL以及子类下面的URL
