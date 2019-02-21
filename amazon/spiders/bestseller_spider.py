@@ -89,7 +89,7 @@ class BestSellSpider(scrapy.Spider):
             bean['offers'] = offers
 
             review = item.xpath(".//a[@class='a-size-small a-link-normal']/text()").extract_first()
-            if review:
+            if review is None:
                 review = "0"
             bean['review'] = review
 

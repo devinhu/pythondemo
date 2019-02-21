@@ -75,7 +75,7 @@ PROXY_MODE = 0
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'amazon.middlewares.AmazonDownloaderMiddleware': None,
-    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'amazon.middlewares.AmazonUserAgentMiddleware': 533,
 
     'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
@@ -118,6 +118,6 @@ AUTOTHROTTLE_MAX_DELAY = 60
 
 # Mysql config infog
 MYSQL_HOST = "localhost"
-MYSQL_DB = "amzon"
+MYSQL_DB = "amazon"
 MYSQL_USER = "root"
-MYSQL_PASSWORD = "huxinwu123"
+MYSQL_PASSWORD = "12345678"

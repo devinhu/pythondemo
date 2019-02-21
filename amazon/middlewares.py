@@ -115,4 +115,5 @@ class AmazonUserAgentMiddleware(object):
         return cls(crawler)
 
     def process_request(self, request, spider):
+        print("ua: "+self.ua.random)
         request.headers.setdefault('User-Agent', self.ua.random)
