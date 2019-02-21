@@ -41,16 +41,16 @@ class Bestseller(scrapy.Item):
     review = scrapy.Field()
     offers = scrapy.Field()
     ranks = scrapy.Field()
+    category = scrapy.Field()
 
     def insert_sql(self):
         sql = """
-               insert into bestseller(title, price, url, asin, review, offers, ranks)
-               values(%s, %s, %s, %s, %s, %s, %s)
-               on duplicate key update title=values(title), price=values(price), url=values(url), review=values(review), offers=values(offers), ranks=values(ranks)
+               insert into bestseller(title, price, url, asin, review, offers, ranks, category)
+               values(%s, %s, %s, %s, %s, %s, %s, %s)
+               on duplicate key update title=values(title), price=values(price), url=values(url), review=values(review), offers=values(offers), ranks=values(ranks), category=values(category)
              """
 
-        params = (
-        self["title"], self["price"], self["url"], self["asin"], self["review"], self["offers"], self["ranks"])
+        params = (self["title"], self["price"], self["url"], self["asin"], self["review"], self["offers"], self["ranks"], self["category"])
 
         return sql, params
 
