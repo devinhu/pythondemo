@@ -18,15 +18,16 @@ class BestsellerURL(scrapy.Item):
     title = scrapy.Field()
     url = scrapy.Field()
     parent_title = scrapy.Field()
+    category_title = scrapy.Field()
 
     def insert_sql(self):
         sql = """
-               insert into bestsellerURL(title, url, parent_title)
+               insert into bestsellerURL(title, url, category_title)
                VALUES(%s, %s, %s)
-               ON DUPLICATE KEY UPDATE url=VALUES(url), parent_title=VALUES(parent_title)
+               ON DUPLICATE KEY UPDATE url=VALUES(url), category_title=VALUES(category_title)
              """
 
-        params = (self["title"], self["url"], self["parent_title"])
+        params = (self["title"], self["url"], self["category_title"])
 
         return sql, params
 

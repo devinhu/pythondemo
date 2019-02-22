@@ -9,7 +9,7 @@ class BestsellerURLSpider(scrapy.Spider):
     name = "bestsellerurl"
     allowed_domains = ["wwww.amazon.com"]
 
-    parent_title = "Toys & Games"
+    title = "Toys & Games"
     start_urls = ["https://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games/ref=zg_bs_nav_0"]
 
     """
@@ -17,30 +17,75 @@ class BestsellerURLSpider(scrapy.Spider):
     """
 
     def parse(self, response):
+        # 获取下一页数据
+        nextlist = response.xpath("//ul[@class='a-pagination']/li/a")
+        if nextlist:
+            for pageURL in nextlist:
+                pagetext = pageURL.xpath("text()").extract_first()
+                if pagetext == "1" or pagetext == "2":
+                    bean = BestsellerURL()
+                    bean['url'] = pageURL.xpath("@href").extract()
+                    bean['title'] = self.title
+                    bean['category_title'] = self.title
+                    yield bean
+
         list = response.xpath("//*[@id='zg_browseRoot']/ul/ul/li")
         for item in list:
+            url = item.xpath("./a/@href").extract_first()
+            title = item.xpath("./a/text()").extract_first().strip()
             bean = BestsellerURL()
-            bean['url'] = item.xpath("./a/@href").extract_first()
-            bean['title'] = item.xpath("./a/text()").extract_first().strip()
-            bean['parent_title'] = self.parent_title
-            yield bean
-            # yield Request(url=bean['url'], callback=self.parse_bestsellers_products, dont_filter=True)
-            yield Request(url=bean['url'], callback=self.parse_child1_url, meta=bean, dont_filter=True)
+            bean['url'] = url
+            bean['title'] = title
 
+            # 获取子类URL
+            yield Request(url=url, callback=self.parse_child_url, meta=bean, dont_filter=True)
     pass
-
 
     """
     解析子分类
     """
 
-    def parse_child1_url(self, response):
+    def parse_child_url(self, response):
+        # 获取下一页数据
+        nextlist = response.xpath("//ul[@class='a-pagination']/li/a")
+        if nextlist:
+            for pageURL in nextlist:
+                pagetext = pageURL.xpath("text()").extract_first()
+                if pagetext == "1" or pagetext == "2":
+                    bean = BestsellerURL()
+                    bean['url'] = pageURL.xpath("@href").extract()
+                    bean['title'] = response.meta["title"]
+                    bean['category_title'] = self.title
+                    yield bean
+
         list = response.xpath("//*[@id='zg_browseRoot']/ul/ul/ul/li")
         for item in list:
+            url = item.xpath("./a/@href").extract_first()
+            title = item.xpath("./a/text()").extract_first().strip()
             bean = BestsellerURL()
-            bean['url'] = item.xpath("./a/@href").extract_first()
-            bean['title'] = item.xpath("./a/text()").extract_first().strip()
-            bean['parent_title'] = response.meta["parent_title"]
-            yield bean
+            bean['url'] = url
+            bean['title'] = title
+
+            # 获取子类URL
+            yield Request(url=url, callback=self.parse_child2_url, meta=bean, dont_filter=True)
 
     pass
+
+    """
+    解析子分类
+    """
+
+    def parse_child2_url(self, response):
+        # 获取下一页数据
+        nextlist = response.xpath("//ul[@class='a-pagination']/li/a")
+        if nextlist:
+            for pageURL in nextlist:
+                pagetext = pageURL.xpath("text()").extract_first()
+                if pagetext == "1" or pagetext == "2":
+                    bean = BestsellerURL()
+                    bean['url'] = pageURL.xpath("@href").extract()
+                    bean['title'] = response.meta["title"]
+                    bean['category_title'] = self.title
+                    yield bean
+    pass
+
