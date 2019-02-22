@@ -1,3 +1,4 @@
+import re
 
 import scrapy
 from scrapy.http import Request
@@ -8,15 +9,13 @@ from amazon.items import BestsellerURL
 class BestsellerURLSpider(scrapy.Spider):
     name = "bestsellerurl"
     allowed_domains = ["wwww.amazon.com"]
-
-    title = "Toys & Games"
     start_urls = ["https://www.amazon.com/Best-Sellers-Toys-Games/zgbs/toys-and-games/ref=zg_bs_nav_0"]
 
     """
     据URL解析当前关键字下的bestsellers的URL以及子类下面的URL
     """
-
     def parse(self, response):
+        category_title = re.match('.*/zgbs/(.*?)/ref.*', response.url, re.M | re.I).group(1)
         # 获取下一页数据
         nextlist = response.xpath("//ul[@class='a-pagination']/li/a")
         if nextlist:
@@ -25,8 +24,8 @@ class BestsellerURLSpider(scrapy.Spider):
                 if pagetext == "1" or pagetext == "2":
                     bean = BestsellerURL()
                     bean['url'] = pageURL.xpath("@href").extract()
-                    bean['title'] = self.title
-                    bean['category_title'] = self.title
+                    bean['title'] = category_title
+                    bean['category_title'] = category_title
                     yield bean
 
         list = response.xpath("//*[@id='zg_browseRoot']/ul/ul/li")
@@ -36,6 +35,7 @@ class BestsellerURLSpider(scrapy.Spider):
             bean = BestsellerURL()
             bean['url'] = url
             bean['title'] = title
+            bean['category_title'] = category_title
 
             # 获取子类URL
             yield Request(url=url, callback=self.parse_child_url, meta=bean, dont_filter=True)
@@ -55,7 +55,7 @@ class BestsellerURLSpider(scrapy.Spider):
                     bean = BestsellerURL()
                     bean['url'] = pageURL.xpath("@href").extract()
                     bean['title'] = response.meta["title"]
-                    bean['category_title'] = self.title
+                    bean['category_title'] = response.meta["category_title"]
                     yield bean
 
         list = response.xpath("//*[@id='zg_browseRoot']/ul/ul/ul/li")
@@ -65,6 +65,7 @@ class BestsellerURLSpider(scrapy.Spider):
             bean = BestsellerURL()
             bean['url'] = url
             bean['title'] = title
+            bean['category_title'] = response.meta["category_title"]
 
             # 获取子类URL
             yield Request(url=url, callback=self.parse_child2_url, meta=bean, dont_filter=True)
@@ -85,7 +86,7 @@ class BestsellerURLSpider(scrapy.Spider):
                     bean = BestsellerURL()
                     bean['url'] = pageURL.xpath("@href").extract()
                     bean['title'] = response.meta["title"]
-                    bean['category_title'] = self.title
+                    bean['category_title'] = response.meta["category_title"]
                     yield bean
     pass
 
