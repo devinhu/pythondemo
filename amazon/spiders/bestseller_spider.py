@@ -16,7 +16,8 @@ class BestSellSpider(scrapy.Spider):
     根据分类从数据库里面查询url
     """
     def start_requests(self):
-        start_urls = ["baby-products",
+        # "baby-products",
+        start_urls = [
                       "beauty",
                       "wireless",
                       "fashion",
@@ -34,10 +35,11 @@ class BestSellSpider(scrapy.Spider):
                       "hi",
                       "toys-and-games"]
 
-        params = dict(category_title=start_urls[0])
-        urls = Sql.getBestsellerURL(params)
-        for urlItem in urls:
-            yield scrapy.Request(url=urlItem["url"], callback=self.parse)
+        for url in start_urls:
+            params = dict(category_title=url)
+            urls = Sql.getBestsellerURL(params)
+            for urlItem in urls:
+                yield scrapy.Request(url=urlItem["url"], callback=self.parse)
 
     pass
 
