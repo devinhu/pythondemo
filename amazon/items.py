@@ -59,20 +59,21 @@ class Bestseller(scrapy.Item):
 
 
 class KeyWords(scrapy.Item):
-    keyletter = scrapy.Field()
-    title = scrapy.Field()
     asin = scrapy.Field()
+    title = scrapy.Field()
+    brand = scrapy.Field()
     url = scrapy.Field()
-    keytitle = scrapy.Field()
+    seed = scrapy.Field()
+    keyword = scrapy.Field()
 
     def insert_sql(self):
         sql = """
-               insert into keywords(keyletter, asin, title, url, keytitle)
-               values(%s, %s, %s, %s, %s)
-               on duplicate key update keyletter=values(keyletter), asin=values(asin), title=values(title), url=values(url), keytitle=values(keytitle)
+               insert into keywords(asin, title, brand, url, seed, keyword)
+               values(%s, %s, %s, %s, %s, %s)
+               on duplicate key update asin=values(asin), title=values(title), brand=values(brand), url=values(url), seed=values(seed), keyword=values(keyword)
              """
 
-        params = (self["keyletter"], self["asin"], self["title"], self["url"], self["keytitle"])
+        params = (self["asin"], self["title"], self["brand"], self["url"], self["seed"], self["keyword"])
 
         return sql, params
 
