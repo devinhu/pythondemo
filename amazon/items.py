@@ -78,3 +78,24 @@ class KeyWords(scrapy.Item):
         return sql, params
 
     pass
+
+
+class AdTrack(scrapy.Item):
+    asin = scrapy.Field()
+    url = scrapy.Field()
+    rank = scrapy.Field()
+    keyword = scrapy.Field()
+    time = scrapy.Field()
+
+    def insert_sql(self):
+        sql = """
+               insert into adTrack(asin, url, rank, keyword, time)
+               values(%s, %s, %s, %s, %s)
+               on duplicate key update asin=values(asin), url=values(url), rank=values(rank), keyword=values(keyword), time=values(time)
+             """
+
+        params = (self["asin"], self["url"], self["rank"], self["keyword"], self["time"])
+
+        return sql, params
+
+    pass

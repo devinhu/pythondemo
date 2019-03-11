@@ -5,12 +5,11 @@ import scrapy
 from scrapy.http import Request
 from six.moves import urllib
 
-from amazon.items import KeyWords
+from amazon.items import AdTrack
 
 
-class KeyWordsSpider(scrapy.Spider):
-
-    name = "keywords"
+class AdTrackSpider(scrapy.Spider):
+    name = "adtrack"
     seed = "Reusable food storage bags"
     allowed_domains = ["wwww.amazon.com"]
     start_urls = ["https://www.amazon.com/s?k=" + seed + "&ref=nb_sb_noss"]
@@ -18,11 +17,12 @@ class KeyWordsSpider(scrapy.Spider):
     """
     解析当前页bestsellers的所有数据
     """
+
     def parse(self, response):
         list = response.xpath("//div[@class='s-result-list sg-row']/div")
         for item in list:
-            bean = KeyWords()
-            bean['seed'] = self.seed
+            bean = AdTrack()
+            bean['keyword'] = self.seed
 
             url = item.xpath(".//a[@class='a-link-normal a-text-normal']/@href").extract_first()
             url = urllib.parse.unquote(url, encoding='utf-8', errors='replace')
@@ -31,20 +31,8 @@ class KeyWordsSpider(scrapy.Spider):
 
             bean['asin'] = re.match('.*/dp/(.*?)/ref.*', url, re.M | re.I).group(1)
 
-            brand = item.xpath(".//div[@class='a-row a-size-base a-color-secondary']/span/text()").extract_first()
-            if brand:
-                brand = brand.replace("by ", "").lower().strip()
-                bean['brand'] = brand
-
-            title = item.xpath(".//a[@class='a-link-normal a-text-normal']/span/text()").extract_first()
-            title = title.lower().strip()
-            if title:
-                bean['title'] = title.replace(brand, "")
-
-            keyword = re.match('.*/(.*?)/dp.*', url, re.M | re.I).group(1)
-            keyword = keyword.lower()
-            if keyword:
-                bean['keyword'] = keyword.replace(brand, "")
+            bean['rank'] = re.match('.*sr_(.*?)/?.*', url, re.M | re.I).group(1)
+            bean['time'] = ""
 
             yield bean
 
@@ -52,4 +40,5 @@ class KeyWordsSpider(scrapy.Spider):
         if nextURL:
             nextURL = parse.urljoin(response.url, nextURL)
             yield Request(url=nextURL, callback=self.parse, dont_filter=True)
+
     pass
