@@ -33,6 +33,7 @@ class MysqlPipeline(object):
         query.addErrback(self.handle_error, item, spider)
 
     def handle_error(self, failure, item, spider):
+        print(item)
         print(failure)
 
     def insert(self, cursor, item):

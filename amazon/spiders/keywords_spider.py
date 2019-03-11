@@ -10,7 +10,7 @@ from amazon.items import KeyWords
 
 class KeyWordsSpider(scrapy.Spider):
     name = "keywords"
-    seed = "Silicone+Food+Storage+Bags"
+    seed = "Reusable+food+storage+bags"
     allowed_domains = ["wwww.amazon.com"]
     start_urls = ["https://www.amazon.com/s?k=" + seed + "&ref=nb_sb_noss"]
 

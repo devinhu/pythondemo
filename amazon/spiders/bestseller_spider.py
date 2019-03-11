@@ -16,24 +16,9 @@ class BestSellSpider(scrapy.Spider):
     根据分类从数据库里面查询url
     """
     def start_requests(self):
-        # "baby-products",
         start_urls = [
-                      "beauty",
-                      "wireless",
-                      "fashion",
-                      "handmade",
-                      "hpc",
-                      "home-garden",
-                      "industrial",
-                      "kitchen",
-                      "musical-instruments",
-                      "office-products",
-                      "lawn-garden",
-                      "pet-supplies",
-                      "sporting-goods",
-                      "sports-collectibles",
-                      "hi",
-                      "toys-and-games"]
+            "kitchen"
+        ]
 
         for url in start_urls:
             params = dict(category_title=url)
@@ -53,7 +38,10 @@ class BestSellSpider(scrapy.Spider):
             url = item.xpath(".//a[@class='a-link-normal']/@href").extract_first()
             bean['category'] = ""
             bean['url'] = parse.urljoin(response.url, url)
-            bean['title'] = item.xpath(".//a[@class='a-link-normal']/div[1]/text()").extract_first().strip()
+
+            title = item.xpath(".//a[@class='a-link-normal']/div[1]/text()").extract_first()
+            if title:
+                bean['title'] = title.strip()
 
             # 处理排名
             ranks = item.xpath(".//span[@class='zg-badge-text']/text()").extract_first()
