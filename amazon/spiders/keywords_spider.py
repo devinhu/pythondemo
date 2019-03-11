@@ -10,7 +10,7 @@ from amazon.items import KeyWords
 
 class KeyWordsSpider(scrapy.Spider):
     name = "keywords"
-    seed = "3d+pen"
+    seed = "Silicone+Food+Storage+Bags"
     allowed_domains = ["wwww.amazon.com"]
     start_urls = ["https://www.amazon.com/s?k=" + seed + "&ref=nb_sb_noss"]
 
@@ -33,16 +33,19 @@ class KeyWordsSpider(scrapy.Spider):
             bean['asin'] = re.match('.*/dp/(.*?)/ref.*', url, re.M | re.I).group(1)
 
             brand = item.xpath(".//div[@class='a-row a-size-base a-color-secondary']/span/text()").extract_first()
-            brand = brand.replace("by ", "").lower().strip()
-            bean['brand'] = brand
+            if brand:
+                brand = brand.replace("by ", "").lower().strip()
+                bean['brand'] = brand
 
             title = item.xpath(".//a[@class='a-link-normal a-text-normal']/span/text()").extract_first().strip()
             title = title.lower()
-            bean['title'] = title.replace(brand, "")
+            if title:
+                bean['title'] = title.replace(brand, "")
 
             keyword = re.match('.*/(.*?)/dp.*', url, re.M | re.I).group(1)
             keyword = keyword.lower()
-            bean['keyword'] = keyword.replace(brand, "")
+            if keyword:
+                bean['keyword'] = keyword.replace(brand, "")
 
             yield bean
 
