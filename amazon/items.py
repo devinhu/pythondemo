@@ -83,18 +83,18 @@ class KeyWords(scrapy.Item):
 class AdTrack(scrapy.Item):
     asin = scrapy.Field()
     url = scrapy.Field()
-    rank = scrapy.Field()
+    rankno = scrapy.Field()
     keyword = scrapy.Field()
-    time = scrapy.Field()
+    creattime = scrapy.Field()
 
     def insert_sql(self):
         sql = """
-               insert into adTrack(asin, url, rank, keyword, time)
+               insert into adTrack(asin, url, rankno, keyword, creattime)
                values(%s, %s, %s, %s, %s)
-               on duplicate key update asin=values(asin), url=values(url), rank=values(rank), keyword=values(keyword), time=values(time)
+               on duplicate key update asin=values(asin), url=values(url), rankno=values(rankno), keyword=values(keyword), creattime=values(creattime)
              """
 
-        params = (self["asin"], self["url"], self["rank"], self["keyword"], self["time"])
+        params = (self["asin"], self["url"], self["rankno"], self["keyword"], self["creattime"])
 
         return sql, params
 

@@ -38,4 +38,5 @@ class MysqlPipeline(object):
 
     def insert(self, cursor, item):
         sql, params = item.insert_sql()
+        # print(sql)
         cursor.execute(sql, params)

@@ -31,8 +31,12 @@ class AdTrackSpider(scrapy.Spider):
 
             bean['asin'] = re.match('.*/dp/(.*?)/ref.*', url, re.M | re.I).group(1)
 
-            bean['rank'] = re.match('.*sr_(.*?)/?.*', url, re.M | re.I).group(1)
-            bean['time'] = ""
+            rankno = re.match('.*/ref=sr_(.*?)/?keywords.*', url, re.M | re.I).group(1)
+            if rankno:
+                rankno = rankno.replace("?", "")
+                bean['rankno'] = rankno
+
+            bean['creattime'] = "2019-03-11"
 
             yield bean
 
