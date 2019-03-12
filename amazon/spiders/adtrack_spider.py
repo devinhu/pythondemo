@@ -1,3 +1,4 @@
+import datetime
 import re
 from urllib import parse
 
@@ -34,9 +35,10 @@ class AdTrackSpider(scrapy.Spider):
             rankno = re.match('.*/ref=sr_(.*?)/?keywords.*', url, re.M | re.I).group(1)
             if rankno:
                 rankno = rankno.replace("?", "")
+                rankno = rankno.replace("_sspa", "")
                 bean['rankno'] = rankno
 
-            bean['creattime'] = "2019-03-11"
+            bean['creattime'] = datetime.datetime.now().strftime('%Y-%m-%d')
 
             yield bean
 
