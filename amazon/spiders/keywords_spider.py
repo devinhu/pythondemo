@@ -11,9 +11,9 @@ from amazon.items import KeyWords
 class KeyWordsSpider(scrapy.Spider):
 
     name = "keywords"
-    seed = "Reusable food storage bags"
-    allowed_domains = ["wwww.amazon.com"]
-    start_urls = ["https://www.amazon.com/s?k=" + seed + "&ref=nb_sb_noss"]
+    seed = "bedside caddy"
+    allowed_domains = ["wwww.amazon.co"]
+    start_urls = ["https://www.amazon.co.uk/s?k=" + seed + "&ref=nb_sb_noss"]
 
     """
     解析当前页bestsellers的所有数据
@@ -35,10 +35,13 @@ class KeyWordsSpider(scrapy.Spider):
             if brand:
                 brand = brand.replace("by ", "").lower().strip()
                 bean['brand'] = brand
+            if brand is None:
+                brand = ""
+                bean['brand'] = brand
 
             title = item.xpath(".//a[@class='a-link-normal a-text-normal']/span/text()").extract_first()
             title = title.lower().strip()
-            if title:
+            if title and brand:
                 bean['title'] = title.replace(brand, "")
 
             keyword = re.match('.*/(.*?)/dp.*', url, re.M | re.I).group(1)
