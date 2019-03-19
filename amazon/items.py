@@ -18,16 +18,17 @@ class BestsellerURL(scrapy.Item):
     title = scrapy.Field()
     url = scrapy.Field()
     parent_title = scrapy.Field()
-    category_title = scrapy.Field()
+    category = scrapy.Field()
+    country = scrapy.Field()
 
     def insert_sql(self):
         sql = """
-               insert into bestsellerURL(title, url, category_title)
-               VALUES(%s, %s, %s)
-               ON DUPLICATE KEY UPDATE url=VALUES(url), category_title=VALUES(category_title)
+               insert into bestsellerURL(title, url, category, country)
+               VALUES(%s, %s, %s, %s)
+               ON DUPLICATE KEY UPDATE url=VALUES(url), category=VALUES(category), country=VALUES(country)
              """
 
-        params = (self["title"], self["url"], self["category_title"])
+        params = (self["title"], self["url"], self["category"], self["country"])
 
         return sql, params
 
@@ -43,15 +44,18 @@ class Bestseller(scrapy.Item):
     offers = scrapy.Field()
     ranks = scrapy.Field()
     category = scrapy.Field()
+    country = scrapy.Field()
 
     def insert_sql(self):
         sql = """
-               insert into bestseller(title, price, url, asin, review, offers, ranks, category)
-               values(%s, %s, %s, %s, %s, %s, %s, %s)
-               on duplicate key update title=values(title), price=values(price), url=values(url), review=values(review), offers=values(offers), ranks=values(ranks), category=values(category)
+               insert into bestseller(title, price, url, asin, review, offers, ranks, category, country)
+               values(%s, %s, %s, %s, %s, %s, %s, %s, %s)
+               on duplicate key update title=values(title), price=values(price), url=values(url), review=values(review), offers=values(offers), ranks=values(ranks), category=values(category), country=values(country)
              """
 
-        params = (self["title"], self["price"], self["url"], self["asin"], self["review"], self["offers"], self["ranks"], self["category"])
+        params = (
+        self["title"], self["price"], self["url"], self["asin"], self["review"], self["offers"], self["ranks"],
+        self["category"], self["country"])
 
         return sql, params
 

@@ -24,7 +24,7 @@ class BestSellSpider(scrapy.Spider):
             params = dict(category_title=url)
             urls = Sql.getBestsellerURL(params)
             for urlItem in urls:
-                yield scrapy.Request(url=urlItem["url"], callback=self.parse)
+                yield scrapy.Request(url=urlItem["url"], meta=urlItem["country"], callback=self.parse)
 
     pass
 
@@ -35,8 +35,11 @@ class BestSellSpider(scrapy.Spider):
         list = response.xpath("//ol[@id='zg-ordered-list']/li")
         for item in list:
             bean = Bestseller()
-            url = item.xpath(".//a[@class='a-link-normal']/@href").extract_first()
+
             bean['category'] = ""
+            bean['country'] = response.meta["country"]
+
+            url = item.xpath(".//a[@class='a-link-normal']/@href").extract_first()
             bean['url'] = parse.urljoin(response.url, url)
 
             title = item.xpath(".//a[@class='a-link-normal']/div[1]/text()").extract_first()
