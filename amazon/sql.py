@@ -19,7 +19,7 @@ class Sql:
     @classmethod
     def getBestsellerURL(cls, params):
         sql = """
-            SELECT url FROM bestsellerURL WHERE category_title = %s
+            SELECT url, country FROM bestsellerURL WHERE category = %s and country = %s
         """
-        cursor.execute(sql, (params["category_title"]))
+        cursor.execute(sql, (params["category"], params["country"]))
         return cursor.fetchall()

@@ -8,7 +8,7 @@ from amazon.sql import Sql
 
 
 class BestSellSpider(scrapy.Spider):
-
+    country = "UK"
     name = "bestseller"
     allowed_domains = ["wwww.amazon.com"]
 
@@ -21,10 +21,10 @@ class BestSellSpider(scrapy.Spider):
         ]
 
         for url in start_urls:
-            params = dict(category_title=url)
+            params = dict(category=url, country=self.country)
             urls = Sql.getBestsellerURL(params)
             for urlItem in urls:
-                yield scrapy.Request(url=urlItem["url"], meta=urlItem["country"], callback=self.parse)
+                yield scrapy.Request(url=urlItem["url"], callback=self.parse)
 
     pass
 
@@ -37,7 +37,7 @@ class BestSellSpider(scrapy.Spider):
             bean = Bestseller()
 
             bean['category'] = ""
-            bean['country'] = response.meta["country"]
+            bean['country'] = self.country
 
             url = item.xpath(".//a[@class='a-link-normal']/@href").extract_first()
             bean['url'] = parse.urljoin(response.url, url)
@@ -57,6 +57,8 @@ class BestSellSpider(scrapy.Spider):
                 price = "0"
             else:
                 price = price.replace("$", "")
+                price = price.replace("£", "")
+                price = price.replace(" ", "")
                 if price.find("-") > 0:
                     price = price.split("-")[0]
             bean['price'] = price
