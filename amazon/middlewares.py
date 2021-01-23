@@ -5,8 +5,13 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+import time
+
+import scrapy
 from fake_useragent import UserAgent
 from scrapy import signals
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 
 class AmazonSpiderMiddleware(object):
@@ -82,13 +87,18 @@ class AmazonDownloaderMiddleware(object):
         return None
 
     def process_response(self, request, response, spider):
-        # Called with the response returned from the downloader.
-
-        # Must either;
-        # - return a Response object
-        # - return a Request object
-        # - or raise IgnoreRequest
-        return response
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')  # 使用无头谷歌浏览器模式
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--no-sandbox')
+        # 指定谷歌浏览器路径
+        self.driver = webdriver.Chrome(chrome_options=chrome_options, executable_path='/usr/local/bin/chromedriver')
+        if request.url != 'https://www.aqistudy.cn/historydata/':
+            self.driver.get(request.url)
+            time.sleep(1)
+            html = self.driver.page_source
+            self.driver.quit()
+        return scrapy.http.HtmlResponse(url=request.url, body=html.encode('utf-8'), encoding='utf-8', request=request)
 
     def process_exception(self, request, exception, spider):
         # Called when a download handler or a process_request()

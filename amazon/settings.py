@@ -60,7 +60,7 @@ RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
 # http://username:password@host2:port
 # http://host3:port
 # ...
-PROXY_LIST = '/Users/mac/PycharmProjects/pythondemo/amazon/list.txt'
+PROXY_LIST = '/Users/apple/Documents/GitHub/PycharmProjects/pythondemo/amazon/list.txt'
 
 # Proxy mode
 # 0 = Every requests have different proxy
@@ -74,7 +74,7 @@ PROXY_MODE = 0
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'amazon.middlewares.AmazonDownloaderMiddleware': None,
+    'amazon.middlewares.AmazonDownloaderMiddleware': 543,
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'amazon.middlewares.AmazonUserAgentMiddleware': 533,
 

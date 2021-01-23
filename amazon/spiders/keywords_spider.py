@@ -12,12 +12,13 @@ class KeyWordsSpider(scrapy.Spider):
 
     name = "keywords"
     seed = "bedside caddy"
-    allowed_domains = ["wwww.amazon.co"]
-    start_urls = ["https://www.amazon.co.uk/s?k=" + seed + "&ref=nb_sb_noss"]
+    allowed_domains = ["www.amazon.co.uk"]
+    start_urls = ["https://www.amazon.co.uk/s?k=bedside&ref=nb_sb_noss"]
 
     """
     解析当前页bestsellers的所有数据
     """
+
     def parse(self, response):
         list = response.xpath("//div[@class='s-result-list sg-row']/div")
         for item in list:

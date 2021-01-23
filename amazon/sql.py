@@ -3,10 +3,10 @@ import pymysql
 from amazon import settings
 
 db = pymysql.connect(
-    settings.MYSQL_HOST,
-    settings.MYSQL_USER,
-    settings.MYSQL_PASSWORD,
-    settings.MYSQL_DB,
+    host=settings.MYSQL_HOST,
+    user=settings.MYSQL_USER,
+    password=settings.MYSQL_PASSWORD,
+    database=settings.MYSQL_DB,
     charset="utf8",
     cursorclass=pymysql.cursors.DictCursor
 )
